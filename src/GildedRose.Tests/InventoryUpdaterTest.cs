@@ -12,15 +12,15 @@ namespace GildedRose.Tests
         [Theory]
         [InlineData(20, 30)]
         [InlineData(20, 0)]
-        public void UpdateBaseItemTest_UpdateBaseItem_QualityDecreaseByOne(int sellIn, int quality)
+        public void UpdateNormalItemTest_UpdateNormalItem_QualityDecreaseByOne(int sellIn, int quality)
         {
-            var baseItem = new ItemForSell {SellIn = sellIn, Quality = quality, Type = ItemForSellType.Base};
-            _inventoryUpdater.Update(baseItem);
+            var item = new ItemForSell {SellIn = sellIn, Quality = quality, Type = ItemForSellType.Normal};
+            _inventoryUpdater.Update(item);
             var expQuality = Math.Max(quality - 1, 0);
             var expSellIn = Math.Max(sellIn - 1, 0);
 
-            Assert.Equal(expQuality, baseItem.Quality);
-            Assert.Equal(expSellIn, baseItem.SellIn);
+            Assert.Equal(expQuality, item.Quality);
+            Assert.Equal(expSellIn, item.SellIn);
         }
 
         [Theory]
@@ -83,6 +83,20 @@ namespace GildedRose.Tests
             var item = new ItemForSell { SellIn = sellIn, Quality = quality, Type = ItemForSellType.Legendary };
             _inventoryUpdater.Update(item);
             Assert.Equal(quality, item.Quality);
+        }
+
+        [Theory]
+        [InlineData(20, 30)]
+        [InlineData(20, 0)]
+        public void UpdateConjuredItemTest_UpdateConjuredItem_QualityDecreaseByTwo(int sellIn, int quality)
+        {
+            var item = new ItemForSell { SellIn = sellIn, Quality = quality, Type = ItemForSellType.Conjured };
+            _inventoryUpdater.Update(item);
+            var expQuality = Math.Max(quality - 2, 0);
+            var expSellIn = Math.Max(sellIn - 1, 0);
+
+            Assert.Equal(expQuality, item.Quality);
+            Assert.Equal(expSellIn, item.SellIn);
         }
     }
 }

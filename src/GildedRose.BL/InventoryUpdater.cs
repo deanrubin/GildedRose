@@ -1,37 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GildedRose.BL.Models;
 
 namespace GildedRose.BL
 {
     public class InventoryUpdater
     {
-        private readonly IDictionary<ItemForSellType, Action<ItemForSell>> _updateFunctions = new Dictionary<ItemForSellType, Action<ItemForSell>>()
+        private readonly IDictionary<ItemForSellType, Action<ItemForSell>> _updateQualityFunctions = new Dictionary<ItemForSellType, Action<ItemForSell>>()
         {
-            {ItemForSellType.Base, UpdateQualityOfBaseItem},
+            {ItemForSellType.Normal, UpdateQualityOfNormalItem},
             {ItemForSellType.BackstagePasses, UpdateQualityOfBackstagePassesItem},
-            {ItemForSellType.AgedBrie, UpdateQualityOfAgedBrie},
+            {ItemForSellType.AgedBrie, UpdateQualityOfAgedBrieItem},
             {ItemForSellType.Legendary, x => {}},
+            {ItemForSellType.Conjured, UpdateQualityOfConjuredItem},
         };
 
-        public void Update(ItemForSell itemToUpdate)
+        public Task Update(ItemForSell itemToUpdate)
         {
-            if (!_updateFunctions.TryGetValue(itemToUpdate.Type, out var func))
+            if (!_updateQualityFunctions.TryGetValue(itemToUpdate.Type, out var func))
             {
                 throw new ArgumentException($"The item with the name: {itemToUpdate.Name} and the type: {itemToUpdate.Type} is invalid");
             }
 
             func.Invoke(itemToUpdate);
+
             itemToUpdate.SellIn--;
+            if (itemToUpdate.SellIn < 0)
+            {
+                itemToUpdate.SellIn = 0;
+            }
+
+            return Task.CompletedTask;
         }
 
-        private static void UpdateQualityOfAgedBrie(ItemForSell itemToUpdate)
+        private static void UpdateQualityOfAgedBrieItem(ItemForSell itemToUpdate)
         {
             itemToUpdate.Quality++;
             itemToUpdate.Quality = Math.Min(itemToUpdate.Quality, 50);
         }
 
-        private static void UpdateQualityOfBaseItem(ItemForSell itemToUpdate)
+        private static void UpdateQualityOfConjuredItem(ItemForSell itemToUpdate)
+        {
+            itemToUpdate.Quality--;
+            UpdateQualityOfNormalItem(itemToUpdate);
+        }
+
+        private static void UpdateQualityOfNormalItem(ItemForSell itemToUpdate)
         {
             itemToUpdate.Quality--;
             if (itemToUpdate.SellIn <= 0)

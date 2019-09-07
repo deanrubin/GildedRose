@@ -3,7 +3,7 @@ $psake.build_success = $true
 
 properties {
 	. $(Get-DefaultPropertiesFile)
-	$src_dir = Join-Path $base_dir "src"
+	$src_dir = Join-Path $Normal_dir "src"
 	$project_name = "GildedRose.Console"
 	$project_dir = Join-Path $src_dir $project_name
 }

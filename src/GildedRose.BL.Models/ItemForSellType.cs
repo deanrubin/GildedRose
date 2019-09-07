@@ -2,7 +2,7 @@
 {
     public enum ItemForSellType
     {
-        Base = 0,
+        Normal = 0,
         AgedBrie = 1,
         Legendary = 2,
         Conjured = 3,
