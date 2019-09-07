@@ -10,6 +10,7 @@ namespace GildedRose.BL
         {
             {ItemForSellType.Base, UpdateQualityOfBaseItem},
             {ItemForSellType.BackstagePasses, UpdateQualityOfBackstagePassesItem},
+            {ItemForSellType.AgedBrie, UpdateQualityOfAgedBrie},
         };
 
         public void Update(ItemForSell itemToUpdate)
@@ -23,15 +24,21 @@ namespace GildedRose.BL
             itemToUpdate.SellIn--;
         }
 
+        private static void UpdateQualityOfAgedBrie(ItemForSell itemToUpdate)
+        {
+            itemToUpdate.Quality++;
+            itemToUpdate.Quality = Math.Min(itemToUpdate.Quality, 50);
+        }
+
         private static void UpdateQualityOfBaseItem(ItemForSell itemToUpdate)
         {
             itemToUpdate.Quality--;
-            UpdateQualityOfExpired(itemToUpdate);
-        }
+            if (itemToUpdate.SellIn <= 0)
+            {
+                itemToUpdate.Quality--;
+            }
 
-        private static void UpdateQualityOfExpired(ItemForSell itemToUpdate)
-        {
-            if (itemToUpdate.SellIn <= 0 || itemToUpdate.Quality < 0)
+            if (itemToUpdate.Quality < 0)
             {
                 itemToUpdate.Quality = 0;
             }
@@ -39,6 +46,12 @@ namespace GildedRose.BL
 
         private static void UpdateQualityOfBackstagePassesItem(ItemForSell itemToUpdate)
         {
+            if (itemToUpdate.SellIn <= 0)
+            {
+                itemToUpdate.Quality = 0;
+                return;
+            }
+
             itemToUpdate.Quality++;
 
             if (itemToUpdate.SellIn <= 10)
@@ -52,8 +65,6 @@ namespace GildedRose.BL
             }
 
             itemToUpdate.Quality = Math.Min(itemToUpdate.Quality, 50);
-
-            UpdateQualityOfExpired(itemToUpdate);
         }
     }
 }

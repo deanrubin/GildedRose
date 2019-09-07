@@ -58,5 +58,20 @@ namespace GildedRose.Tests
             var expQuality = Math.Min(quality + 3, 50);
             Assert.Equal(expQuality, backstagePassesItem.Quality);
         }
+
+        [Theory]
+        [InlineData(10, 30)]
+        [InlineData(5, 50)]
+        [InlineData(5, 30)]
+        [InlineData(10, 0)]
+        [InlineData(5, 0)]
+        [InlineData(20, 0)]
+        public void UpdateAgedBrieItem_UpdateItem_QualityIncreaseByOne(int sellIn, int quality)
+        {
+            var item = new ItemForSell { SellIn = sellIn, Quality = quality, Type = ItemForSellType.AgedBrie };
+            _inventoryUpdater.Update(item);
+            var expQuality = Math.Min(quality + 1, 50);
+            Assert.Equal(expQuality, item.Quality);
+        }
     }
 }
