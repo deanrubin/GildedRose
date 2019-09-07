@@ -34,5 +34,29 @@ namespace GildedRose.Tests
             var expQuality = Math.Min(quality + 1, 50);
             Assert.Equal(expQuality, backstagePassesItem.Quality);
         }
+
+        [Theory]
+        [InlineData(10, 30)]
+        [InlineData(9, 50)]
+        [InlineData(6, 0)]
+        public void UpdateBackstagePassesItemWhenSellInMediumTest_UpdateItem_QualityIncreaseByTwo(int sellIn, int quality)
+        {
+            var backstagePassesItem = new ItemForSell { SellIn = sellIn, Quality = quality, Type = ItemForSellType.BackstagePasses };
+            _inventoryUpdater.Update(backstagePassesItem);
+            var expQuality = Math.Min(quality + 2, 50);
+            Assert.Equal(expQuality, backstagePassesItem.Quality);
+        }
+
+        [Theory]
+        [InlineData(5, 30)]
+        [InlineData(4, 50)]
+        [InlineData(1, 0)]
+        public void UpdateBackstagePassesItemWhenSellInLowTest_UpdateItem_QualityIncreaseByThree(int sellIn, int quality)
+        {
+            var backstagePassesItem = new ItemForSell { SellIn = sellIn, Quality = quality, Type = ItemForSellType.BackstagePasses };
+            _inventoryUpdater.Update(backstagePassesItem);
+            var expQuality = Math.Min(quality + 3, 50);
+            Assert.Equal(expQuality, backstagePassesItem.Quality);
+        }
     }
 }
