@@ -73,5 +73,16 @@ namespace GildedRose.Tests
             var expQuality = Math.Min(quality + 1, 50);
             Assert.Equal(expQuality, item.Quality);
         }
+
+        [Theory]
+        [InlineData(10, 30)]
+        [InlineData(9, 50)]
+        [InlineData(6, 0)]
+        public void UpdateLegendaryItemTest_UpdateItem_QualityRemainTheSame(int sellIn, int quality)
+        {
+            var item = new ItemForSell { SellIn = sellIn, Quality = quality, Type = ItemForSellType.Legendary };
+            _inventoryUpdater.Update(item);
+            Assert.Equal(quality, item.Quality);
+        }
     }
 }

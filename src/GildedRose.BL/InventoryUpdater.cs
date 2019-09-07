@@ -11,6 +11,7 @@ namespace GildedRose.BL
             {ItemForSellType.Base, UpdateQualityOfBaseItem},
             {ItemForSellType.BackstagePasses, UpdateQualityOfBackstagePassesItem},
             {ItemForSellType.AgedBrie, UpdateQualityOfAgedBrie},
+            {ItemForSellType.Legendary, x => {}},
         };
 
         public void Update(ItemForSell itemToUpdate)
