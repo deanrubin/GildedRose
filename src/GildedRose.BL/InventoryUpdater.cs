@@ -9,6 +9,7 @@ namespace GildedRose.BL
         private readonly IDictionary<ItemForSellType, Action<ItemForSell>> _updateFunctions = new Dictionary<ItemForSellType, Action<ItemForSell>>()
         {
             {ItemForSellType.Base, UpdateQualityOfBaseItem},
+            {ItemForSellType.BackstagePasses, UpdateQualityOfBackstagePassesItem},
         };
 
         public void Update(ItemForSell itemToUpdate)
@@ -34,6 +35,25 @@ namespace GildedRose.BL
             {
                 itemToUpdate.Quality = 0;
             }
+        }
+
+        private static void UpdateQualityOfBackstagePassesItem(ItemForSell itemToUpdate)
+        {
+            itemToUpdate.Quality++;
+
+            if (itemToUpdate.SellIn <= 10)
+            {
+                itemToUpdate.Quality++;
+            }
+
+            if (itemToUpdate.SellIn <= 5)
+            {
+                itemToUpdate.Quality++;
+            }
+
+            itemToUpdate.Quality = Math.Min(itemToUpdate.Quality, 50);
+
+            UpdateQualityOfExpired(itemToUpdate);
         }
     }
 }
